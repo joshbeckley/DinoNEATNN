@@ -2,10 +2,12 @@ import pygame
 from constants import GRAVITY, FLOOR_Y, DINO_X, VELOCITY
 
 class Dino:
-    def __init__(self, starting_y):
+    def __init__(self, starting_y, img_path):
         self.y = starting_y
         self.velocity = 0
         self.grounded = True
+        img = pygame.image.load(img_path).convert_alpha()
+        self.img = pygame.transform.scale(img, (200, 200))
     
     def update(self):
         keys = pygame.key.get_pressed()
