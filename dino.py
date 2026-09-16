@@ -6,10 +6,12 @@ class Dino:
         self.y = starting_y
         self.velocity = 0
         self.grounded = True
+
         img = pygame.image.load(img_path).convert_alpha()
-        self.img = pygame.transform.scale(img, (200, 200))
+        self.img_size = img.get_size()
+        self.img = pygame.transform.scale(img, (100, 100))
     
-    def update(self):
+    def update(self, dt):
         keys = pygame.key.get_pressed()
         
         if self.grounded:
@@ -17,8 +19,8 @@ class Dino:
                 self.grounded = False
                 self.velocity = -VELOCITY
 
-        self.y += self.velocity
-        self.velocity += GRAVITY
+        self.y += self.velocity * dt
+        self.velocity += GRAVITY * dt
 
         # Ground detection
         if self.y >= FLOOR_Y:
