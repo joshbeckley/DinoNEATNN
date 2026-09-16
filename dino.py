@@ -1,15 +1,18 @@
 import pygame
 from constants import GRAVITY, FLOOR_Y, DINO_X, VELOCITY
 
-class Dino:
+class Dino(pygame.sprite.Sprite):
     def __init__(self, starting_y, img_path):
+        pygame.sprite.Sprite.__init__(self)
+
         self.y = starting_y
         self.velocity = 0
         self.grounded = True
 
         img = pygame.image.load(img_path).convert_alpha()
-        self.img_size = img.get_size()
-        self.img = pygame.transform.scale(img, (100, 100))
+        self.image = pygame.transform.scale_by(img, 1.5)
+        self.rect = self.image.get_rect()
+        self.rect.midbottom = [DINO_X, self.y]
     
     def update(self, dt):
         keys = pygame.key.get_pressed()
@@ -27,6 +30,8 @@ class Dino:
             self.velocity = 0
             self.grounded = True
             self.y = FLOOR_Y
+
+        self.rect.midbottom = [DINO_X, self.y]
 
 
     def position(self):

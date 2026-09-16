@@ -24,9 +24,8 @@ while running:
         running = False
 
 
-    dino.update(dt)
     environment.draw()
-    
+    environment.update(dt)    
     
     print(dino)
 
