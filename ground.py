@@ -7,4 +7,4 @@ class Ground(pygame.sprite.Sprite):
         img = pygame.image.load(img_path).convert_alpha()
         self.image = pygame.transform.scale_by(img, 1.5)
         self.rect = self.image.get_rect()
-        self.rect.topleft = [x, y]
+        self.rect.topleft = [x, y-8]

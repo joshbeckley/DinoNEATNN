@@ -9,7 +9,7 @@ screen = pygame.display.set_mode((WINDOW_WIDTH, WINDOW_HEIGHT))
 running = True
 clock = pygame.time.Clock()
 
-dino = Dino(FLOOR_Y, "dino.png")
+dino = Dino(FLOOR_Y, "assets/dino.png")
 environment = Environment(screen, dino)
 
 dt = 0
