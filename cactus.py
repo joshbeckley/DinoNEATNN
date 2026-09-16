@@ -9,6 +9,8 @@ class Cactus(pygame.sprite.Sprite):
         self.rect = self.image.get_rect()
         self.rect.midbottom = [x, y]
 
-    def update(self):
-        # self.rect.midbottom = [DINO_X, self.y]
+    def update(self, game_speed, dt):
+        self.rect.x -= game_speed * dt
+        if self.rect.right < 0:
+            self.kill()
         pass

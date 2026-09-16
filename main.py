@@ -1,6 +1,6 @@
 # Example file showing a circle moving on screen
 import pygame
-from constants import WINDOW_HEIGHT, WINDOW_WIDTH, FLOOR_Y, FPS
+from constants import WINDOW_HEIGHT, WINDOW_WIDTH, FLOOR_Y, FPS, GAME_SPEED
 from dino import Dino
 from environment import Environment
 
@@ -10,7 +10,7 @@ running = True
 clock = pygame.time.Clock()
 
 dino = Dino(FLOOR_Y, "assets/dino.png")
-environment = Environment(screen, dino)
+environment = Environment(screen, dino, GAME_SPEED)
 
 dt = 0
 clock.tick(FPS)
@@ -23,13 +23,12 @@ while running:
     if keys[pygame.K_ESCAPE]:
         running = False
 
-
-    environment.draw()
+    environment.add_cactus()
     environment.update(dt)    
+    environment.draw()
+
+    running = not environment.is_collision()
     
-    print(dino)
-
-
     dt = clock.tick(FPS) / 1000.0
 
 pygame.quit()
