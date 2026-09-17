@@ -6,16 +6,20 @@ from ground import Ground
 
 class Environment:
 
-    def __init__(self, screen, dino, game_speed):
+    def __init__(self, screen, dinos, game_speed, ge, nets):
         self.screen = screen
-        self.dino = dino
+        self.dinos = dinos
         self.game_speed = game_speed
+        self.ge = ge
+        self.nets = nets
+
         self.score = 0
 
         self.font = pygame.font.Font('freesansbold.ttf', 10)
 
         self.dino_group = pygame.sprite.Group()
-        self.dino_group.add(self.dino)
+        for dino in dinos:
+            self.dino_group.add(dino)
 
         self.cactus_group = pygame.sprite.Group()
 
@@ -32,27 +36,28 @@ class Environment:
         
         
     def add_cactus(self):
-        # print(f"Elapsed: {self.elapsed_game_time}\nNext: {self.next_spawn_time}\n")
         if self.elapsed_game_time > self.next_spawn_time:
             random_x = random.randint(30,200)
-            print(f"Proposed: {self.screen.get_width() + 2 + random_x}")
             cactus = Cactus(self.screen.get_width() + 2 + random_x, FLOOR_Y, "assets/cactus.png")
-            print(f"Actual: {cactus.rect.midbottom}")
             self.cactus_group.add(cactus)
 
             self.spawn_time_interval -= self.spawn_time_interval_decrease;
-            print(f"Spawn Time Interval: {self.spawn_time_interval}")
             self.next_spawn_time += self.spawn_time_interval;
-            print(f"Next Spawn Time: {self.next_spawn_time}")
 
-    def is_collision(self):
-        if pygame.sprite.groupcollide(self.dino_group, self.cactus_group, False, False):
-            return True
+    def dino_collision(self):
+        for idx, dino in enumerate(self.dinos):
+            if pygame.sprite.spritecollide(dino, self.cactus_group, False):
+                self.ge[idx].fitness -= 1
+                self.dinos.pop(idx)
+                self.nets.pop(idx)
+                self.ge.pop(idx)
+
+                return dino
 
     def draw(self):
         self.screen.fill("white")
 
-        self.draw_info()
+        # self.draw_info()
 
         self.dino_group.draw(self.screen)
         self.cactus_group.draw(self.screen)
@@ -62,11 +67,25 @@ class Environment:
 
     def update(self, dt):
         self.dino_group.update(dt)
+
+        for idx, dino in enumerate(self.dinos):
+            # should i do this? since i update it anyway in a few lines
+            # self.ge[x].fitness += 0.1
+
+            output = self.nets[idx].activate((dino.grounded, dino.distance_to_cactus(self.cactus_group), self.game_speed * dt))
+            if output[0] > 0.5:
+                dino.jump()
+            
+            dino.update(dt)
+
         self.cactus_group.update(self.game_speed, dt)
         self.game_speed += GAME_SPEED_INCREASE * dt
 
         self.elapsed_game_time += 1 * dt
         self.score = self.elapsed_game_time * 10
+
+        for g in self.ge:
+            g.fitness += 5 * dt
 
     def draw_info(self):
         speed = self.font.render("Speed:".ljust(30) + f"{self.game_speed}", True, BLACK, WHITE)

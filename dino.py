@@ -22,14 +22,16 @@ class Dino(pygame.sprite.Sprite):
                 distance = cactus.rect.left - self.rect.right
 
             return distance
+        
+        return -1
 
     def update(self, dt):
         keys = pygame.key.get_pressed()
         
         if self.grounded:
             if keys[pygame.K_SPACE]:
-                self.grounded = False
-                self.velocity = -VELOCITY
+                print("Jump")
+                self.jump()
 
         self.rect.y += self.velocity * dt
         if self.velocity > 0:   
@@ -43,9 +45,13 @@ class Dino(pygame.sprite.Sprite):
             self.grounded = True
             self.rect.bottom = FLOOR_Y
 
+    def jump(self):
+        self.grounded = False
+        self.velocity = -VELOCITY
+
     def position(self):
         return (DINO_X, self.rect.bottom)
     
     
     def __str__(self):
-        return f"Y: {self.rect.bottom}\nGrounded: {self.grounded}\n"
+        return f"Grounded: {self.grounded}\nVelocity: {self.velocity}"
