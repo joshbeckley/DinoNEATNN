@@ -10,6 +10,7 @@ class Environment:
         self.screen = screen
         self.dino = dino
         self.game_speed = game_speed
+        self.score = 0
 
         self.font = pygame.font.Font('freesansbold.ttf', 10)
 
@@ -26,7 +27,7 @@ class Environment:
         # self.last_cactus = pygame.time.get_ticks() - CACTUS_FREQUENCY
         self.elapsed_game_time = 0
         self.spawn_time_interval = CACTUS_FREQUENCY_SECS;
-        self.spawn_time_interval_decrease = 0.01;
+        self.spawn_time_interval_decrease = 0.03;
         self.next_spawn_time = self.spawn_time_interval;
         
         
@@ -65,6 +66,7 @@ class Environment:
         self.game_speed += GAME_SPEED_INCREASE * dt
 
         self.elapsed_game_time += 1 * dt
+        self.score = self.elapsed_game_time * 10
 
     def draw_info(self):
         speed = self.font.render("Speed:".ljust(30) + f"{self.game_speed}", True, BLACK, WHITE)
@@ -82,8 +84,18 @@ class Environment:
         nextRect.topleft = (10, 30)
         self.screen.blit(next, nextRect)
 
-        elapsed = self.font.render(f"Elapsed Time:".ljust(26) + f"{self.elapsed_game_time}", True, BLACK, WHITE)
+        elapsed = self.font.render(f"Elapsed Time:".ljust(25) + f"{self.elapsed_game_time}", True, BLACK, WHITE)
         elapsedRect = elapsed.get_rect()
         elapsedRect.topleft = (10, 40)
         self.screen.blit(elapsed, elapsedRect)
+
+        score = self.font.render(f"Score:".ljust(31) + f"{self.score}", True, BLACK, WHITE)
+        scoreRect = score.get_rect()
+        scoreRect.topleft = (10, 50)
+        self.screen.blit(score, scoreRect)
+
+        distance = self.font.render(f"Distance:".ljust(29) + f"{self.dino.distance_to_cactus(self.cactus_group)}", True, BLACK, WHITE)
+        distanceRect = distance.get_rect()
+        distanceRect.topleft = (10, 60)
+        self.screen.blit(distance, distanceRect)
         

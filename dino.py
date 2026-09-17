@@ -13,6 +13,16 @@ class Dino(pygame.sprite.Sprite):
         self.rect = self.image.get_rect()
         self.rect.midbottom = [DINO_X, starting_y]
     
+    def distance_to_cactus(self, cactus_group):
+        if cactus_group:
+            cactus = cactus_group.sprites()[0]
+            distance = cactus.rect.left - self.rect.right
+            if distance < 0 and len(cactus_group.sprites()) == 2:
+                cactus = cactus_group.sprites()[1]
+                distance = cactus.rect.left - self.rect.right
+
+            return distance
+
     def update(self, dt):
         keys = pygame.key.get_pressed()
         
@@ -22,7 +32,10 @@ class Dino(pygame.sprite.Sprite):
                 self.velocity = -VELOCITY
 
         self.rect.y += self.velocity * dt
-        self.velocity += GRAVITY * dt
+        if self.velocity > 0:   
+            self.velocity += GRAVITY*1.5 * dt
+        else:
+            self.velocity += GRAVITY * dt
 
         # Ground detection
         if self.rect.bottom >= FLOOR_Y:
