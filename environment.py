@@ -73,7 +73,7 @@ class Environment:
             # self.ge[x].fitness += 0.1
 
             output = self.nets[idx].activate((dino.grounded, dino.distance_to_cactus(self.cactus_group), self.game_speed * dt))
-            if output[0] > 0.5:
+            if output[0] > 0.5 and dino.grounded:
                 dino.jump()
             
             dino.update(dt)
@@ -86,6 +86,10 @@ class Environment:
 
         for g in self.ge:
             g.fitness += 5 * dt
+
+    def dino_debug(self):
+        for idx, dino in enumerate(self.dinos):
+            print(f"-----------\nDino {idx}\n{dino}\n---------------")
 
     def draw_info(self):
         speed = self.font.render("Speed:".ljust(30) + f"{self.game_speed}", True, BLACK, WHITE)

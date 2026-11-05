@@ -28,6 +28,7 @@ def eval_genomes(genomes, config):
     dt = 0
     clock.tick(FPS)
     running = True
+    debug_count = 0
     while running:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -39,6 +40,12 @@ def eval_genomes(genomes, config):
         environment.draw()
         environment.dino_collision()
         
+        debug_count+=1
+        if debug_count % 50 == 0:
+            print(str(debug_count) + "=========================")
+            environment.dino_debug()
+            print("\n\n\n\n")
+
         if len(environment.dinos) == 0:
             running = False
             print("---------------------------------no more dinos-------------")
